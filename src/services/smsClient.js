@@ -3,25 +3,24 @@ const { TEXT_LOCAL_API_KEY, TEXT_LOCAL_API_SENDER, TEXT_LOCAL_API_URL } = requir
 
 const tlClient = axios.create({
     baseURL: TEXT_LOCAL_API_URL,
-    params: {
-        apiKey: TEXT_LOCAL_API_KEY,
-        sender: TEXT_LOCAL_API_SENDER
-    }
 });
 
 const smsClient = {
     sendOtpVerificationMessage: async (user) => {
         if (user && user.phone && user.code) {
             const params = new URLSearchParams();
+            params.append("apiKey", TEXT_LOCAL_API_KEY);
+            params.append("sender", TEXT_LOCAL_API_SENDER); // Please change you value here
             params.append("numbers", [parseInt("91" + user.phone)]);
             params.append(
                 "message",
                 `Hi there, thank you for sending your first test message from Textlocal. Get 20% off today with our code: ${user.code}.`
             );
-            console.log(params);
+            const url = "send/?"+ params.toString();
+            console.log(url);
             const promiseSendSMS = new Promise((resolve, reject) => {
-                tlClient.post("send", params).then(res => {
-                    console.log(res);
+                tlClient.get(url).then(res => {
+                    console.log(res.data);
                     resolve(res.data && res.data.status && res.data.status == "success");
                 }).catch(e => {
                     reject(e);
