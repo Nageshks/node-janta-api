@@ -6,5 +6,7 @@ module.exports = {
     USER_NOT_FOUND_ERR: "User not found",
     ACCESS_DENIED_ERR: "Access denied",
     SUCCESS: "success",
-    ERROR: "error"
+    ERROR: "error",
+    INVALID_ARGUMENT: "invalid argument",
+    PROBLEM_SENDING_OTP: "problem sending otp"
 }

@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
     },
     resetToken: String,
     expireToken: Date,
-    isVerified: Boolean
+    isVerified: {
+        type: Boolean, 
+        default: false
+    },
+    otp: Number
 }, { timestamps: true })
 
 mongoose.model(constants.user, userSchema)

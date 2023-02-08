@@ -1,10 +1,10 @@
 const strings = require("./strings");
 
-module.exports.success = function success(res, data = {}, status = 200, msg = strings.SUCCESS) {
+module.exports.success = function success({ res, data = {}, status = 200, msg = strings.SUCCESS }) {
     res.status(status).send(successRes(status, msg, data));
 }
 
-module.exports.error = function error(res, data = {}, status = 400, msg = strings.ERROR) {
+module.exports.error = function error({ res, data = {}, status = 400, msg = strings.ERROR }) {
     res.status(status).send(errorRes(status, msg, data));
 }
 
