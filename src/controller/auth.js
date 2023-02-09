@@ -4,7 +4,8 @@ const { validateLoginWithPhone } = require("../validator/loginValidator");
 const { generatePin } = require("../utils");
 const c = require("../constants");
 const mongoose = require('mongoose');
-const { INVALID_ARGUMENT, PROBLEM_SENDING_OTP } = require("../utils/strings");
+const { INVALID_ARGUMENT, PROBLEM_SENDING_OTP, NO_USER_FOUND, LOGIN_SUCCESS, INCORRECT_OTP } = require("../utils/strings");
+const { validateOtpValidator } = require("../validator/validateOtpValidator");
 
 module.exports.authenticateWithPhone = async function authenticateWithPhone(req, res) {
     try {
@@ -50,6 +51,41 @@ module.exports.authenticateWithPhone = async function authenticateWithPhone(req,
                 } else {
                     error({ res, msg: PROBLEM_SENDING_OTP });
                 }
+            }
+        });
+    } catch (e) {
+        console.log(e);
+        error({ res });
+    }
+}
+
+module.exports.validatePhoneAuth = async function validatePhoneAuth(req, res) {
+    try {
+        const response = validateOtpValidator(req.body);
+        if (response.error) {
+            console.log(response.error);
+            return error({ res, msg: INVALID_ARGUMENT });
+        }
+        const { phone, otp } = response.value;
+        const User = mongoose.model(c.user);
+        const query = { phone: phone };
+        User.findOne(query, function (err, user) {
+            if (err) {
+                return err({ res, msg: NO_USER_FOUND });
+            }
+            if (user) {
+                const otpMatch = user.otp === parseInt(otp);
+                if (otpMatch) {
+                    user.otp = "";
+                    user.isVerified = true;
+                    user.save().then(result => {
+                        return success({ res, msg: LOGIN_SUCCESS });
+                    })
+                } else {
+                    return error({ res, msg: INCORRECT_OTP });
+                }
+            } else {
+                return err({ res, msg: NO_USER_FOUND });
             }
         });
     } catch (e) {

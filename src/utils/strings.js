@@ -1,5 +1,5 @@
 module.exports = {
-    SERVER_ERR: "Something went wrong",
+    SERVER_ERR: "something went wrong",
     AUTH_HEADER_MISSING_ERR: "auth header is missing",
     AUTH_TOKEN_MISSING_ERR: "auth token is missing",
     JWT_DECODE_ERR: "incorrect token",
@@ -8,5 +8,8 @@ module.exports = {
     SUCCESS: "success",
     ERROR: "error",
     INVALID_ARGUMENT: "invalid argument",
-    PROBLEM_SENDING_OTP: "problem sending otp"
+    PROBLEM_SENDING_OTP: "problem sending otp",
+    NO_USER_FOUND: "no user found",
+    LOGIN_SUCCESS: "login sucessful",
+    INCORRECT_OTP: "incorrect otp"
 }
