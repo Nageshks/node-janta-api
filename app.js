@@ -18,7 +18,7 @@ if (NODE_ENV === "development") {
 }
 app.use('/', indexRoutes);
 app.use('/auth/', authRoutes);
-app.use('/', apiRoutes);
+app.use('/api/', apiRoutes);
 
 mongoose.set('strictQuery', false);
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

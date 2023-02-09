@@ -4,8 +4,10 @@ const { validateLoginWithPhone } = require("../validator/loginValidator");
 const { generatePin } = require("../utils");
 const c = require("../constants");
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const { INVALID_ARGUMENT, PROBLEM_SENDING_OTP, NO_USER_FOUND, LOGIN_SUCCESS, INCORRECT_OTP } = require("../utils/strings");
 const { validateOtpValidator } = require("../validator/validateOtpValidator");
+const { JWT_SECRET } = require("../config");
 
 module.exports.authenticateWithPhone = async function authenticateWithPhone(req, res) {
     try {
@@ -79,7 +81,8 @@ module.exports.validatePhoneAuth = async function validatePhoneAuth(req, res) {
                     user.otp = "";
                     user.isVerified = true;
                     user.save().then(result => {
-                        return success({ res, msg: LOGIN_SUCCESS });
+                        const tkn = jwt.sign({ _id: user._id }, JWT_SECRET);
+                        return success({ res, msg: LOGIN_SUCCESS, data: { token: tkn } });
                     })
                 } else {
                     return error({ res, msg: INCORRECT_OTP });

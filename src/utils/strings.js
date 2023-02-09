@@ -11,5 +11,10 @@ module.exports = {
     PROBLEM_SENDING_OTP: "problem sending otp",
     NO_USER_FOUND: "no user found",
     LOGIN_SUCCESS: "login sucessful",
-    INCORRECT_OTP: "incorrect otp"
+    INCORRECT_OTP: "incorrect otp",
+    LOGIN_REQUIRED: "you must be logged in",
+    ERROR_UPDATING_USER: "error updating user",
+    SUCCESS_UPDATE_USER: "user updated successfully",
+    INVALID_CREDENTIALS: "invalid credentials",
+    USER_NOT_VERIFIED: "user not verified"
 }
