@@ -6,6 +6,7 @@ const indexRoutes = require("./src/routes/index");
 const authRoutes = require("./src/routes/auth");
 const apiRoutes = require("./src/routes/api");
 const { PORT, MONGO_URI, NODE_ENV } = require("./src/config");
+const requireLogin = require('./src/middleware/requireLogin');
 
 // startups
 const app = express();
@@ -18,7 +19,7 @@ if (NODE_ENV === "development") {
 }
 app.use('/', indexRoutes);
 app.use('/auth/', authRoutes);
-app.use('/api/', apiRoutes);
+app.use('/api/', requireLogin, apiRoutes);
 
 mongoose.set('strictQuery', false);
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -3,10 +3,11 @@ const c = require("../constants");
 const mongoose = require('mongoose');
 const { INVALID_ARGUMENT } = require("../utils/strings");
 const strings = require("../utils/strings");
+const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
 
 module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
     try {
-        const response = addUserMinInfo(req.body);
+        const response = addUserMinInfoValidator(req.body);
         if (response.error) {
             console.log(response.error);
             return error({ res, msg: INVALID_ARGUMENT });

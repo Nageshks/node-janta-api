@@ -3,20 +3,20 @@ const mongoose = require('mongoose');
 const { JWT_SECRET } = require('../config');
 const c = require('../constants/index');
 const status = require('../constants/status');
+const { error } = require('../utils/response');
 const strings = require('../utils/strings');
 
 module.exports = (req, res, next) => {
     const { authorization } = req.headers;
     //authorization === Bearer <token>
     if (!authorization) {
-        // error({ res, msg: strings.LOGIN_REQUIRED, status: status.LOGIN_REQUIRED });
+        return error({ res, msg: strings.LOGIN_REQUIRED, status: status.LOGIN_REQUIRED });
     }
     const token = authorization.replace("Bearer ", "");
     const User = mongoose.model(c.user);
     jwt.verify(token, JWT_SECRET, (err, payload) => {
         if (err) {
-            // return error({ res, msg: strings.INVALID_CREDENTIALS, status: status.LOGIN_REQUIRED });
-            next(err);
+            return error({ res, msg: strings.INVALID_CREDENTIALS, status: status.LOGIN_REQUIRED });
         }
         const { _id } = payload;
         User.findById(_id).then(userdata => {
@@ -24,8 +24,7 @@ module.exports = (req, res, next) => {
             if(req.user.isVerified){
                 next(err);
             }else {
-                // error({ res, msg: strings.USER_NOT_VERIFIED, status: status.USER_NOT_VERIFIED });
-                next(err);
+                error({ res, msg: strings.USER_NOT_VERIFIED, status: status.USER_NOT_VERIFIED });
             }
         })
     })
