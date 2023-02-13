@@ -82,7 +82,7 @@ module.exports.validatePhoneAuth = async function validatePhoneAuth(req, res) {
                     user.isVerified = true;
                     user.save().then(result => {
                         const tkn = jwt.sign({ _id: user._id }, JWT_SECRET);
-                        return success({ res, msg: LOGIN_SUCCESS, data: { token: tkn } });
+                        return success({ res, status: user.firstname ? 200 : 201, msg: LOGIN_SUCCESS, data: { token: tkn } });
                     })
                 } else {
                     return error({ res, msg: INCORRECT_OTP });
