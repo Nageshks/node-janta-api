@@ -10,6 +10,7 @@ module.exports = {
     INVALID_ARGUMENT: "invalid argument",
     PROBLEM_SENDING_OTP: "problem sending otp",
     NO_USER_FOUND: "no user found",
+    USER_NOT_EXISTS: "user not exists",
     LOGIN_SUCCESS: "login sucessful",
     INCORRECT_OTP: "incorrect otp",
     LOGIN_REQUIRED: "you must be logged in",
