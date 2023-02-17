@@ -41,16 +41,29 @@ module.exports.authenticateWithPhone = async function authenticateWithPhone(req,
             } else {
                 // handle new user
                 console.log("new user");
-                const newUser = new User({
+                const SocialMedia = mongoose.model(c.socialMedia);
+                const socialMedia = new SocialMedia({
                     phone: msg.phone,
-                    otp: msg.code
-                })
+                });                
+                
                 const otpSent = await smsClient.sendOtpVerificationMessage(msg);
                 console.log(otpSent);
                 if (otpSent) {
-                    newUser.save().then(createdUser => {
-                        success({ res, status: 201 });
-                    })
+                    socialMedia.save((err, savedSocialMedia) => {
+                        if (err) {
+                            // handle error
+                        } else {
+                            const newUser = new User({
+                                phone: msg.phone,
+                                otp: msg.code,
+                                socialMedia: savedSocialMedia._id
+                            });
+                            newUser.save().then(createdUser => {
+                                success({ res, status: 201 });
+                            });
+                        }
+                    });
+                    
                 } else {
                     error({ res, msg: PROBLEM_SENDING_OTP });
                 }

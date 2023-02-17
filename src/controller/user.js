@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const { INVALID_ARGUMENT } = require("../utils/strings");
 const strings = require("../utils/strings");
 const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
-const { user } = require("../constants");
 const status = require("../constants/status");
 
 module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
@@ -32,16 +31,26 @@ module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
 module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req, res) {
     try {
         const { firstname, lastname, username, bio } = req.user;
-        if(username == null || username == undefined || firstname == null || firstname == undefined){
-            error({res, status: status.PERSONAL_DETAIL_NOT_FILLED, msg: strings.PERSONAL_DETAILS_NOT_FILLED})
-        }else{
+        if (username == null || username == undefined || firstname == null || firstname == undefined) {
+            error({ res, status: status.PERSONAL_DETAIL_NOT_FILLED, msg: strings.PERSONAL_DETAILS_NOT_FILLED })
+        } else {
             const User = mongoose.model(c.user);
-            success({res, data: {
-                firstname : firstname,
-                lastname: lastname || "",
-                username: username,
-                bio: bio || ""
-            }})
+            const select = '-_id phone personalMail collegeMail workMail whatsapp telegram instagram facebook twitter linkedin linktree website';
+            const userWithSocialMedia = await User.findById(req.user._id).populate("socialMedia", select).exec();
+            if(userWithSocialMedia.socialMedia != null){
+                const socialLinks = userWithSocialMedia.socialMedia;
+                success({
+                    res, data: {
+                        firstname: firstname,
+                        lastname: lastname || "",
+                        username: username,
+                        bio: bio || "",
+                        socialLinks: socialLinks
+                    }
+                })
+            }else {
+                error({ res });
+            }
         }
     } catch (e) {
         console.log(e);

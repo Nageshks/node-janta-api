@@ -33,7 +33,11 @@ const userSchema = new mongoose.Schema({
         type: Boolean, 
         default: false
     },
-    otp: Number
+    otp: Number,
+    socialMedia: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: constants.socialMedia
+    }
 }, { timestamps: true })
 
 mongoose.model(constants.user, userSchema)

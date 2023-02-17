@@ -11,6 +11,7 @@ const requireLogin = require('./src/middleware/requireLogin');
 // startups
 const app = express();
 require("./src/models/user")
+require("./src/models/socialMedia")
 app.use(bodyParser.json({ limit: '3mb', extended: true }))
 // app.use(bodyParser.urlencoded({ limit: '3mb', extended: true }))
 if (NODE_ENV === "development") {
