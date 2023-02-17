@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const { INVALID_ARGUMENT } = require("../utils/strings");
 const strings = require("../utils/strings");
 const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
+const { user } = require("../constants");
+const status = require("../constants/status");
 
 module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
     try {
@@ -26,3 +28,23 @@ module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
         error({ res });
     }
 }
+
+module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req, res) {
+    try {
+        const { firstname, lastname, username } = req.user;
+        if(username == null || username == undefined || firstname == null || firstname == undefined){
+            error({res, status: status.PERSONAL_DETAIL_NOT_FILLED, msg: strings.PERSONAL_DETAILS_NOT_FILLED})
+        }else{
+            const User = mongoose.model(c.user);
+            success({res, data: {
+                firstname : firstname,
+                lastname: lastname || "",
+                username: username
+            }})
+        }
+    } catch (e) {
+        console.log(e);
+        error({ res });
+    }
+}
+

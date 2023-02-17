@@ -17,5 +17,6 @@ module.exports = {
     ERROR_UPDATING_USER: "error updating user",
     SUCCESS_UPDATE_USER: "user updated successfully",
     INVALID_CREDENTIALS: "invalid credentials",
-    USER_NOT_VERIFIED: "user not verified"
+    USER_NOT_VERIFIED: "user not verified",
+    PERSONAL_DETAILS_NOT_FILLED: "personal details not filled"
 }

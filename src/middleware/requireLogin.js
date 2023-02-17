@@ -21,10 +21,17 @@ module.exports = (req, res, next) => {
         const { _id } = payload;
         User.findById(_id).then(userdata => {
             req.user = userdata;
-            if(req.user.isVerified){
+            console.log(req.user);
+            if(req.user == null){
+                return error({ res, msg: strings.INVALID_CREDENTIALS });
+            }
+            else if(!req.user.isVerified){
+                error({ res, msg: strings.USER_NOT_VERIFIED, status: status.USER_NOT_VERIFIED });
+            }
+            else if(req.user.isVerified){
                 next(err);
             }else {
-                error({ res, msg: strings.USER_NOT_VERIFIED, status: status.USER_NOT_VERIFIED });
+                error({ res, msg: strings.SERVER_ERR });
             }
         })
     })
