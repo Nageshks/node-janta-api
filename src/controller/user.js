@@ -31,7 +31,7 @@ module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
 
 module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req, res) {
     try {
-        const { firstname, lastname, username } = req.user;
+        const { firstname, lastname, username, bio } = req.user;
         if(username == null || username == undefined || firstname == null || firstname == undefined){
             error({res, status: status.PERSONAL_DETAIL_NOT_FILLED, msg: strings.PERSONAL_DETAILS_NOT_FILLED})
         }else{
@@ -39,7 +39,8 @@ module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req,
             success({res, data: {
                 firstname : firstname,
                 lastname: lastname || "",
-                username: username
+                username: username,
+                bio: bio || ""
             }})
         }
     } catch (e) {
