@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema({
         unique: true,
         sparse: true,
     },
+    profilePic: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    profileCover: {
+        type: String,
+        required: false,
+        trim: true
+    },
     bio: {
         type: String,
         required: false
@@ -30,7 +40,7 @@ const userSchema = new mongoose.Schema({
     resetToken: String,
     expireToken: Date,
     isVerified: {
-        type: Boolean, 
+        type: Boolean,
         default: false
     },
     otp: Number,
