@@ -18,5 +18,10 @@ module.exports = {
     SUCCESS_UPDATE_USER: "user updated successfully",
     INVALID_CREDENTIALS: "invalid credentials",
     USER_NOT_VERIFIED: "user not verified",
-    PERSONAL_DETAILS_NOT_FILLED: "personal details not filled"
+    PERSONAL_DETAILS_NOT_FILLED: "personal details not filled",
+    userNotFound: 'User not found',
+    userDeleted: 'User deleted successfully',
+    errorDeletingUser: 'Error deleting user',
+    socialMediaNotFound: 'SocialMedia not found',
+    errorDeletingSocialMedia: 'Error deleting SocialMedia'
 }

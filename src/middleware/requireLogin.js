@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
             req.user = userdata;
             console.log(req.user);
             if(req.user == null){
-                return error({ res, msg: strings.INVALID_CREDENTIALS });
+                return error({ res, status: 404, msg: strings.userNotFound });
             }
             else if(!req.user.isVerified){
                 error({ res, msg: strings.USER_NOT_VERIFIED, status: status.USER_NOT_VERIFIED });

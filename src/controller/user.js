@@ -5,7 +5,9 @@ const { INVALID_ARGUMENT } = require("../utils/strings");
 const strings = require("../utils/strings");
 const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
 const status = require("../constants/status");
+const { string } = require("joi");
 const User = mongoose.model(c.user);
+const SocialMedia = mongoose.model(c.socialMedia);
 
 
 module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
@@ -37,7 +39,7 @@ module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req,
         } else {
             const select = '-_id phone personalMail collegeMail workMail whatsapp telegram instagram facebook twitter linkedin linktree website';
             const userWithSocialMedia = await User.findById(req.user._id).populate("socialMedia", select).exec();
-            if(userWithSocialMedia.socialMedia != null){
+            if (userWithSocialMedia.socialMedia != null) {
                 const socialLinks = userWithSocialMedia.socialMedia;
                 success({
                     res, data: {
@@ -48,7 +50,7 @@ module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req,
                         socialLinks: socialLinks
                     }
                 })
-            }else {
+            } else {
                 error({ res });
             }
         }
@@ -58,3 +60,19 @@ module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req,
     }
 }
 
+exports.deleteCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findOneAndRemove({ _id: req.user._id });
+        if (!user) {
+            return error({ res, status: 404, msg: strings.userNotFound });
+        }
+        // Delete the related socialMedia document as well
+        if (user.socialMedia) {
+            await SocialMedia.findOneAndRemove({ _id: user.socialMedia });
+        }
+        success({ res, msg: strings.userDeleted })
+    } catch (err) {
+        console.error(err);
+        success({ res, msg: strings.errorDeletingUser })
+    }
+};
