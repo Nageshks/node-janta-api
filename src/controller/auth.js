@@ -9,6 +9,8 @@ const { INVALID_ARGUMENT, PROBLEM_SENDING_OTP, NO_USER_FOUND, LOGIN_SUCCESS, INC
 const { validateOtpValidator } = require("../validator/validateOtpValidator");
 const { JWT_SECRET } = require("../config");
 const strings = require("../utils/strings");
+const User = mongoose.model(c.user);
+const SocialMedia = mongoose.model(c.socialMedia);
 
 module.exports.authenticateWithPhone = async function authenticateWithPhone(req, res) {
     try {
@@ -17,7 +19,6 @@ module.exports.authenticateWithPhone = async function authenticateWithPhone(req,
             return error({ res, msg: INVALID_ARGUMENT });
         }
         const { phone } = response.value;
-        const User = mongoose.model(c.user);
         const query = { phone: phone };
         User.findOne(query, async function (err, user) {
             if (err) {
@@ -41,7 +42,6 @@ module.exports.authenticateWithPhone = async function authenticateWithPhone(req,
             } else {
                 // handle new user
                 console.log("new user");
-                const SocialMedia = mongoose.model(c.socialMedia);
                 const socialMedia = new SocialMedia({
                     phone: msg.phone,
                 });                
@@ -82,7 +82,6 @@ module.exports.resendOtp = async function resendOtp(req, res) {
             return error({ res, msg: INVALID_ARGUMENT });
         }
         const { phone } = response.value;
-        const User = mongoose.model(c.user);
         const query = { phone: phone };
         User.findOne(query, async function (err, user) {
             if (err) {
@@ -121,7 +120,6 @@ module.exports.validatePhoneAuth = async function validatePhoneAuth(req, res) {
             return error({ res, msg: INVALID_ARGUMENT });
         }
         const { phone, otp } = response.value;
-        const User = mongoose.model(c.user);
         const query = { phone: phone };
         User.findOne(query, function (err, user) {
             if (err) {

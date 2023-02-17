@@ -5,6 +5,8 @@ const { INVALID_ARGUMENT } = require("../utils/strings");
 const strings = require("../utils/strings");
 const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
 const status = require("../constants/status");
+const User = mongoose.model(c.user);
+
 
 module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
     try {
@@ -14,7 +16,6 @@ module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
             return error({ res, msg: INVALID_ARGUMENT });
         }
         const { firstname, lastname, username } = response.value;
-        const User = mongoose.model(c.user);
         User.findOneAndUpdate({ _id: req.user._id }, { firstname, lastname, username })
             .then(result => {
                 success({ res, msg: strings.SUCCESS_UPDATE_USER });
@@ -34,7 +35,6 @@ module.exports.getCurrentUserDetails = async function getCurrentUserDetails(req,
         if (username == null || username == undefined || firstname == null || firstname == undefined) {
             error({ res, status: status.PERSONAL_DETAIL_NOT_FILLED, msg: strings.PERSONAL_DETAILS_NOT_FILLED })
         } else {
-            const User = mongoose.model(c.user);
             const select = '-_id phone personalMail collegeMail workMail whatsapp telegram instagram facebook twitter linkedin linktree website';
             const userWithSocialMedia = await User.findById(req.user._id).populate("socialMedia", select).exec();
             if(userWithSocialMedia.socialMedia != null){
