@@ -23,5 +23,6 @@ module.exports = {
     userDeleted: 'User deleted successfully',
     errorDeletingUser: 'Error deleting user',
     socialMediaNotFound: 'SocialMedia not found',
-    errorDeletingSocialMedia: 'Error deleting SocialMedia'
+    errorDeletingSocialMedia: 'Error deleting SocialMedia',
+    errorUpadatingUserProfile: "Erro updating UserProfile"
 }

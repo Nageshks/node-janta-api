@@ -5,7 +5,8 @@ const { INVALID_ARGUMENT } = require("../utils/strings");
 const strings = require("../utils/strings");
 const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
 const status = require("../constants/status");
-const { string } = require("joi");
+const { updateUserProfileValidator } = require("../validator/updateSocialLinksValidator");
+const { merge, pick } = require("lodash");
 const User = mongoose.model(c.user);
 const SocialMedia = mongoose.model(c.socialMedia);
 
@@ -78,3 +79,30 @@ exports.deleteCurrentUser = async (req, res) => {
         success({ res, msg: strings.errorDeletingUser })
     }
 };
+
+module.exports.updateCurrentUserProfile = async (req, res) => {
+    try {
+        const response = updateUserProfileValidator(req.body);
+        if (response.error) {
+            console.log(response.error);
+            return error({ res, msg: INVALID_ARGUMENT });
+        } else {
+            const { phone, personalMail, collegeMail, workMail, whatsapp, telegram, instagram, facebook, twitter, linkedin, linktree, website, firstname, lastname, bio } = response.value;
+            const newSocialFields = { phone, personalMail, collegeMail, workMail, whatsapp, telegram, instagram, facebook, twitter, linkedin, linktree, website };
+            const newUserFields = { firstname, lastname, bio };
+            const updatedSocialMedia = await SocialMedia.findByIdAndUpdate(req.user.socialMedia, newSocialFields, { new: true, projection: { _id: 0, __v: 0 } });
+            const updatedUser = await User.findByIdAndUpdate(req.user._id, newUserFields, { new: true, projection: { _id: 0, __v: 0, phone: 0, isVerified: 0, otp: 0, socialMedia: 0, createdAt: 0, updatedAt: 0, username: 0, profilePic: 0 } });
+            if (updatedSocialMedia != null && updatedUser != null) {
+                success({
+                    res,    
+                    data: merge(updatedUser, updatedSocialMedia)
+                })
+            } else {
+                error({ res, msg: strings.errorUpadatingUserProfile });
+            }
+        }
+    } catch (e) {
+        console.log(e);
+        error({ res });
+    }
+}
