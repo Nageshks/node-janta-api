@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const { createDirectories } = require('./src/utils/fileUtils');
 
 // Import configuration settings
 const { PORT, MONGO_URI, NODE_ENV } = require("./src/config");
@@ -44,6 +45,9 @@ if (NODE_ENV === "development") {
     const morgan = require("morgan");
     app.use(morgan("dev"));
 }
+
+// Create uploads directory if it doesn't exist
+createDirectories();
 
 // Set up routes
 app.use('/', require("./src/routes/index"));

@@ -7,6 +7,8 @@ const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidato
 const status = require("../constants/status");
 const { updateUserProfileValidator } = require("../validator/updateSocialLinksValidator");
 const { merge, pick } = require("lodash");
+const { removeFile } = require("../utils/fileUtils");
+const { getProfilePictureURL } = require("../utils");
 const User = mongoose.model(c.user);
 const SocialMedia = mongoose.model(c.socialMedia);
 
@@ -94,7 +96,7 @@ module.exports.updateCurrentUserProfile = async (req, res) => {
             const updatedUser = await User.findByIdAndUpdate(req.user._id, newUserFields, { new: true, projection: { _id: 0, __v: 0, phone: 0, isVerified: 0, otp: 0, socialMedia: 0, createdAt: 0, updatedAt: 0, username: 0, profilePic: 0 } });
             if (updatedSocialMedia != null && updatedUser != null) {
                 success({
-                    res,    
+                    res,
                     data: merge(updatedUser, updatedSocialMedia)
                 })
             } else {
@@ -106,3 +108,36 @@ module.exports.updateCurrentUserProfile = async (req, res) => {
         error({ res });
     }
 }
+
+module.exports.updateProfilePicture = async (req, res) => {
+    try {
+        // Check if file is present in the request
+        if (!req.file) {
+            return error({ res, msg: strings.pleaseUploadImage });
+        }
+
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return error({ res, msg: strings.userNotFound, status: 404 });
+        }
+
+        // Delete Existing profile picture
+        removeFile(user.profilePic);
+
+        // Save the file path to the user document
+        user.profilePic = req.file.path;
+
+        // Save the updated user document
+        await user.save();
+        const newProfilePicUrl = getProfilePictureURL(req, user.profilePic);
+        success({
+            res, msg: strings.successUploadProfilPicture, data: {
+                profilePic: newProfilePicUrl
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        error({ res, msg: strings.SERVER_ERR });
+    }
+};
