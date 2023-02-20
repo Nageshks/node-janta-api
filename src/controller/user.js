@@ -8,7 +8,7 @@ const status = require("../constants/status");
 const { updateUserProfileValidator } = require("../validator/updateSocialLinksValidator");
 const { merge, pick } = require("lodash");
 const { removeFile } = require("../utils/fileUtils");
-const { getProfilePictureURL } = require("../utils");
+const { getProfilePictureURL: getImageUrl } = require("../utils");
 const User = mongoose.model(c.user);
 const SocialMedia = mongoose.model(c.socialMedia);
 
@@ -130,10 +130,43 @@ module.exports.updateProfilePicture = async (req, res) => {
 
         // Save the updated user document
         await user.save();
-        const newProfilePicUrl = getProfilePictureURL(req, user.profilePic);
+        const newProfilePicUrl = getImageUrl(req, user.profilePic);
         success({
             res, msg: strings.successUploadProfilPicture, data: {
                 profilePic: newProfilePicUrl
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        error({ res, msg: strings.SERVER_ERR });
+    }
+};
+
+module.exports.updateProfileCover = async (req, res) => {
+    try {
+        // Check if file is present in the request
+        if (!req.file) {
+            return error({ res, msg: strings.pleaseUploadImage });
+        }
+
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return error({ res, msg: strings.userNotFound, status: 404 });
+        }
+
+        // Delete Existing profile picture
+        removeFile(user.profileCover);
+
+        // Save the file path to the user document
+        const image = req.file.path;
+        user.profileCover = image;
+
+        // Save the updated user document
+        await user.save();
+        success({
+            res, msg: strings.successUploadProfileCover, data: {
+                profileCover: getImageUrl(req, image)
             }
         });
     } catch (err) {

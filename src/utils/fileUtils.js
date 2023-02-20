@@ -9,6 +9,7 @@ const createDirectories = () => {
 };
 
 const removeFile = (filePath) => {
+  if(filePath == null || filePath == undefined) return; 
   fs.unlink(filePath, (err) => {
     if (err) {
       console.log(`Error deleting file: ${filePath}`);

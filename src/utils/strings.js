@@ -27,5 +27,6 @@ module.exports = {
     errorUpadatingUserProfile: "Erro updating UserProfile",
     errorFindingUpadatingUserProfilePicture: "Error while user finding and updating profile picture",
     pleaseUploadImage: "Please upload an image.",
-    successUploadProfilPicture: "Profile picture updated successfully"
+    successUploadProfilPicture: "Profile picture updated successfully",
+    successUploadProfileCover: "Profile cover updated successfully",
 }
