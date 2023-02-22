@@ -27,12 +27,14 @@ module.exports.updateUserProfileValidator = (body) => {
             .optional(),
         telegram: Joi.string()
             .alphanum() // only allow alphanumeric characters
-            .min(5)
+            .min(3)
             .max(32)
             .allow('')
             .optional(),
         instagram: Joi.string()
-            .pattern(/^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_]{1,}$/i)
+            .alphanum() // only allow alphanumeric characters
+            .min(3)
+            .max(32)
             .allow('')
             .optional(),
         facebook: Joi.string()
@@ -40,7 +42,9 @@ module.exports.updateUserProfileValidator = (body) => {
             .allow('')
             .optional(),
         twitter: Joi.string()
-            .pattern(/^https?:\/\/(www\.)?twitter\.com\/[a-zA-Z0-9_]{1,15}$/i)
+            .alphanum() // only allow alphanumeric characters
+            .min(3)
+            .max(32)
             .allow('')
             .optional(),
         linkedin: Joi.string()
