@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const path = require("path");
 const { createDirectories } = require('./src/utils/fileUtils');
 
 // Import configuration settings
@@ -51,6 +52,7 @@ createDirectories();
 
 // Set up routes
 app.use('/', require("./src/routes/index"));
+app.use('/uploads', express.static(path.join(__dirname,"uploads")));
 app.use('/auth/', require("./src/routes/auth"));
 
 // Require login for API routes

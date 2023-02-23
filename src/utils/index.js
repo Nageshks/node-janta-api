@@ -3,5 +3,5 @@ module.exports.generatePin = function generatePin() {
 }
 
 module.exports.getProfilePictureURL = (req,filepath) => {
-    return `${req.protocol}://${req.get('host')}/api/${filepath}`;
+    return `${req.protocol}://${req.get('host')}/${filepath}`;
 }
