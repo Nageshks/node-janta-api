@@ -1,5 +1,5 @@
 const express = require("express");
-const { addUserMinInfo, getCurrentUserDetails, deleteCurrentUser, updateCurrentUserProfile, updateProfilePicture, updateProfileCover } = require("../controller/user");
+const { addUserMinInfo, getCurrentUserDetails, deleteCurrentUser, updateCurrentUserProfile, updateProfilePicture, updateProfileCover, getProfileAvatars, setProfileImageAvatar } = require("../controller/user");
 const uploadImage = require('../middleware/multer');
 const router = express.Router();
 // const path = require('path');
@@ -13,5 +13,7 @@ router.post("/delete-current-user", deleteCurrentUser);
 router.post("/update-current-user-profile", updateCurrentUserProfile);
 router.post("/update-current-user-profile-pic", uploadImage.single('profilePicture'), updateProfilePicture);
 router.post("/update-current-user-profile-cover", uploadImage.single('profileCover'), updateProfileCover);
+router.post("/update-current-user-profile-avatar", setProfileImageAvatar);
+router.get("/get-all-avatars", getProfileAvatars);
 
 module.exports = router;

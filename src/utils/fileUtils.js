@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { flip } = require('lodash');
 const path = require('path');
 
 const createDirectories = () => {
@@ -10,14 +11,16 @@ const createDirectories = () => {
 
 const removeFile = (filePath) => {
   if(filePath == null || filePath == undefined) return; 
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.log(`Error deleting file: ${filePath}`);
-      console.log(err);
-    } else {
-      console.log(`File deleted: ${filePath}`);
-    }
-  });
+  if (!fs.existsSync(filePath)) {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.log(`Error deleting file: ${filePath}`);
+        console.log(err);
+      } else {
+        console.log(`File deleted: ${filePath}`);
+      }
+    });
+  }
 };
 
 module.exports = {

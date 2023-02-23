@@ -6,12 +6,21 @@ const strings = require("../utils/strings");
 const { addUserMinInfoValidator } = require("../validator/addUserMinInfoValidator");
 const status = require("../constants/status");
 const { updateUserProfileValidator } = require("../validator/updateSocialLinksValidator");
-const { merge, pick } = require("lodash");
+const { merge } = require("lodash");
 const { removeFile } = require("../utils/fileUtils");
-const { getProfilePictureURL: getImageUrl } = require("../utils");
+const { getProfilePictureURL: getImageUrl, getImagePathFromURL } = require("../utils");
+const { validateUpdateProfilePictureUrl } = require("../validator/updateProfilePictureUrlValidator");
 const User = mongoose.model(c.user);
 const SocialMedia = mongoose.model(c.socialMedia);
 
+const avatarImages = (req) => {
+    return [
+        { url: getImageUrl(req, "uploads/avatar1.png") },
+        { url: getImageUrl(req, "uploads/avatar2.png") },
+        { url: getImageUrl(req, "uploads/avatar3.png") },
+        { url: getImageUrl(req, "uploads/avatar4.png") },
+    ];
+}
 
 module.exports.addUserMinInfo = async function addUserMinInfo(req, res) {
     try {
@@ -169,6 +178,53 @@ module.exports.updateProfileCover = async (req, res) => {
                 profileCover: getImageUrl(req, image)
             }
         });
+    } catch (err) {
+        console.error(err);
+        error({ res, msg: strings.SERVER_ERR });
+    }
+};
+
+module.exports.getProfileAvatars = async (req, res) => {
+    try {
+        success({
+            res, data: avatarImages(req)
+        });
+    } catch (err) {
+        console.error(err);
+        error({ res, msg: strings.SERVER_ERR });
+    }
+};
+
+module.exports.setProfileImageAvatar = async (req, res) => {
+    try {
+
+        const response = validateUpdateProfilePictureUrl(req.body);
+        if (response.error) {
+            console.log(response.error);
+            return error({ res, msg: INVALID_ARGUMENT });
+        } else {
+
+            const { filename } = response.value;
+            const user = await User.findById(req.user._id);
+            if (!user) {
+                return error({ res, msg: strings.userNotFound, status: 404 });
+            }
+
+            // Delete Existing profile picture
+            removeFile(user.profileCover);
+
+            // Save the file path to the user document
+            const image = filename;
+            user.profileCover = image;
+
+            // Save the updated user document
+            await user.save();
+            success({
+                res, msg: strings.successUploadProfilPicture, data: {
+                    profilePic: image
+                }
+            });
+        }
     } catch (err) {
         console.error(err);
         error({ res, msg: strings.SERVER_ERR });
