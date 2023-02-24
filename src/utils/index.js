@@ -16,5 +16,6 @@ module.exports.getImagePathFromURL = (url) => {
     // Extract the directory name and filename from the file path
     const dirName = path.dirname(filePath);
     const fileName = path.basename(filePath);
-    return `${path.join(dirName, fileName)}`;
+    const data = (`${dirName}/${fileName}`).substring(1);
+    return data;
 }

@@ -215,7 +215,7 @@ module.exports.setProfileImageAvatar = async (req, res) => {
 
             // Save the file path to the user document
             const image = filename;
-            user.profileCover = image;
+            user.profilePic = getImagePathFromURL(image);
 
             // Save the updated user document
             await user.save();
