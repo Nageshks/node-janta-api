@@ -19,6 +19,8 @@ const avatarImages = (req) => {
         { url: getImageUrl(req, "uploads/avatar2.png") },
         { url: getImageUrl(req, "uploads/avatar3.png") },
         { url: getImageUrl(req, "uploads/avatar4.png") },
+        { url: getImageUrl(req, "uploads/avatar5.png") },
+        { url: getImageUrl(req, "uploads/avatar6.png") },
     ];
 }
 
